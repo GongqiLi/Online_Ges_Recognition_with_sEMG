@@ -3,23 +3,23 @@ import numpy as np
 import torch
 
 
-class sub_Struct(Structure):
+class SubStruct(Structure):
     _fields_ = [
         ("sub_test_int", c_int),
         ("sub_test_char_arr", c_char * 300)
     ]
 
 
-class NET_DVR_ALARMER(Structure):
+class NetDvrAlarm(Structure):
     _fields_ = [
         ("test_int", c_int),
         ("char_array", c_char * 20000),
-        ("test_sub_struct", sub_Struct),
+        ("test_sub_struct", SubStruct),
         ("byte_test_p", POINTER(c_byte))
     ]
 
 
-CALLFUNC = CFUNCTYPE(c_void_p, POINTER(NET_DVR_ALARMER))
+CALLFUNC = CFUNCTYPE(c_void_p, POINTER(NetDvrAlarm))
 
 
 def callback_msg(type_struct):
@@ -37,6 +37,5 @@ def callback_msg(type_struct):
     return data_tem
 
 
-mylib = windll.LoadLibrary("FetchGForceData64.dll")
-
-mylib.check(CALLFUNC(callback_msg), None)
+my_lib = windll.LoadLibrary("FetchGForceData64.dll")
+my_lib.check(CALLFUNC(callback_msg), None)

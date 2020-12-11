@@ -6,6 +6,7 @@ import sys
 import datetime
 import random
 
+import openpyxl
 from pyqtgraph.Qt import QtCore, QtGui
 import pyqtgraph as pg
 import numpy as np
@@ -38,13 +39,13 @@ class NET_DVR_ALARMER(Structure):
 CALLFUNC = CFUNCTYPE(c_void_p, POINTER(NET_DVR_ALARMER))
 
 
-class comThread(QThread):
+class ComThread(QThread):
     expSignal = pyqtSignal(list)
 
-    def __init__(self, param, parent=None):
-        super(comThread, self).__init__(parent)
+    def __init__(self, parent=None):
+        super(ComThread, self).__init__(parent)
 
-    def callbackMsg(self, type_struct):
+    def callback_msg(self, type_struct):
         str_tem = str(type_struct.contents.char_array.decode())
         data_tem = []
         str_list_tem = str_tem.split(',')
@@ -59,8 +60,8 @@ class comThread(QThread):
         self.expSignal.emit(data_tem)
 
     def run(self):
-        mylib = windll.LoadLibrary('FetchGForceData64.dll')
-        mylib.check(CALLFUNC(self.callbackMsg), None)
+        my_lib = windll.LoadLibrary('FetchGForceData64.dll')
+        my_lib.check(CALLFUNC(self.callback_msg), None)
 
 
 class Demo(QWidget):
@@ -68,8 +69,15 @@ class Demo(QWidget):
     def __init__(self, param):
         super(Demo, self).__init__()
         self.detect = OnlineGestureDetection('dnn.pt', param)
-
+        self.if_predict = param['if_predict']
         self.resize(3200, 1800)
+
+        self.save_button = QPushButton(self)
+        self.save_button.setText('Save Data')
+        self.save_button.move(2410, 1210)
+
+        self.save_button.clicked.connect(self.save_data)
+
         self.p1 = PlotWidget(self)
         self.p1.setGeometry(QtCore.QRect(10, 10, 780, 580))
         self.p2 = PlotWidget(self)
@@ -96,15 +104,14 @@ class Demo(QWidget):
         self.p6.setXRange(0, 100)
         self.p7.setXRange(0, 100)
         self.p8.setXRange(0, 100)
-        self.p9.setXRange(1, 8)
-        self.p1.setYRange(0, 255)
-        self.p2.setYRange(0, 255)
-        self.p3.setYRange(0, 255)
-        self.p4.setYRange(0, 255)
-        self.p5.setYRange(0, 255)
-        self.p6.setYRange(0, 255)
-        self.p7.setYRange(0, 255)
-        self.p8.setYRange(0, 255)
+        self.p1.setYRange(80, 160)
+        self.p2.setYRange(80, 160)
+        self.p3.setYRange(80, 160)
+        self.p4.setYRange(80, 160)
+        self.p5.setYRange(80, 160)
+        self.p6.setYRange(80, 160)
+        self.p7.setYRange(80, 160)
+        self.p8.setYRange(80, 160)
         self.p9.setYRange(0, 1)
         self.curve1 = self.p1.plot(np.random.normal(size=100))
         self.curve2 = self.p2.plot(np.random.normal(size=100))
@@ -114,16 +121,15 @@ class Demo(QWidget):
         self.curve6 = self.p6.plot(np.random.normal(size=100))
         self.curve7 = self.p7.plot(np.random.normal(size=100))
         self.curve8 = self.p8.plot(np.random.normal(size=100))
-        self.bar = pg.BarGraphItem(x=range(1, 9), height=[[0.125]] * 8, width=0.6, brush='w')
+        self.bar = pg.BarGraphItem(x=range(1, 4), height=[[1/3]] * 3, width=0.6, brush='w')
         self.p9.addItem(self.bar)
 
-        self.my_thread = comThread(param)
-        self.my_thread.expSignal.connect(self.set_label_func)
+        self.my_thread = ComThread()
+        self.my_thread.expSignal.connect(self.receive_data)
         self.my_thread.start()
 
-    def set_label_func(self, data_tem):
+    def receive_data(self, data_tem):
         self.detect.take_in_multiple_data(data_tem)
-        predict, softmax_scores = self.detect.predict()
 
         self.curve1.setData(np.array(self.detect.buffer)[-100:, 0])
         self.curve2.setData(np.array(self.detect.buffer)[-100:, 0])
@@ -133,8 +139,21 @@ class Demo(QWidget):
         self.curve6.setData(np.array(self.detect.buffer)[-100:, 0])
         self.curve7.setData(np.array(self.detect.buffer)[-100:, 0])
         self.curve8.setData(np.array(self.detect.buffer)[-100:, 0])
-        self.bar.setOpts(height=softmax_scores)
+        if self.if_predict:
+            predict, softmax_scores = self.detect.predict()
+            self.bar.setOpts(height=np.array(self.bar.getData()[1]).flatten() * 0.9 + softmax_scores * 0.1)
 
+
+
+    def save_data(self):
+        data = list(self.detect.buffer)
+        print(len(data))
+        wb = openpyxl.Workbook()
+        ws = wb.active
+
+        for item in data:
+            ws.append(item)
+        wb.save('train/new.xlsx')
 
 if __name__ == '__main__':
     real_time = True
@@ -143,7 +162,8 @@ if __name__ == '__main__':
                  'window_length': 20,
                  'buffer_length': 200,
                  'effective_zone': 100,
-                 'filter': True}
+                 'filter': True,
+                 'if_predict': True}
         app = QApplication(sys.argv)
         demo = Demo(param)
         demo.show()
@@ -153,7 +173,8 @@ if __name__ == '__main__':
                  'window_length': 20,
                  'buffer_length': 200,
                  'effective_zone': 100,
-                 'filter': True}
+                 'filter': True,
+                 'if_predict': True}
         detect = OnlineGestureDetection('dnn.pt', param)
 
         name = 'train/test2.xlsx'
@@ -171,7 +192,7 @@ if __name__ == '__main__':
                 ax.set_xlim(0, 100)
                 ax.set_ylim(80, 160)
                 lines[row * 4 + col], = ax.plot([], [], color=(
-                random.uniform(0, 1), random.uniform(0, 1), random.uniform(0, 1)))
+                    random.uniform(0, 1), random.uniform(0, 1), random.uniform(0, 1)))
         ax = fig.add_subplot(grid_spec[2, 0:3])
         bar = ax.bar(range(1, 9), [0] * 8)
         ax.set_title('Gesture Scores')

@@ -20,7 +20,6 @@ class TrainDNN(object):
         self.data_folder_path = data_folder_path
         self.num_of_ges = param['num_of_ges']
         self.threshold = param['threshold']
-        self.window_length = param['window_length']
         self.visualization = param['visualization']
         self.training_iter = param['training_iter']
         self.learning_rate = param['learning_rate']
@@ -47,7 +46,8 @@ class TrainDNN(object):
             return simple_list
 
         for m in range(self.num_of_ges):
-            name = '/gesture%d_exclusive.xlsx' % m
+            # name = '/gesture%d_exclusive.xlsx' % m
+            name = '/new_%d.xlsx' % m
             ws = load_workbook(self.data_folder_path + name).active
             output_filter = ws.max_column * [[]]
             cnt = 0
@@ -181,9 +181,8 @@ class TrainDNN(object):
 if __name__ == '__main__':
     data_path = os.getcwd() + '/train'
     param = {
-        'num_of_ges': 8,
+        'num_of_ges': 3,
         'threshold': 2,
-        'window_length': 20,
         'visualization': False,
         'training_iter': 5,
         'learning_rate': 0.002,
