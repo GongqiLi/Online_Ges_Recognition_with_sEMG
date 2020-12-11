@@ -1,0 +1,57 @@
+<GATTService>
+    <PrimaryService Index="0" UUID="1800" StartHandle="1" EndHandle="7" NumofIncludeService="0" NumofCharacterristic="3">
+        <Characteristic Index="0" Handle="2" UUID="2A00" Property="2" ValueHandle="3" NumofCharacterristicDescriptor="0">
+            <CharacteristicValue Handle="3" Value="67466F72636550726F2B283142413829"/>
+        </Characteristic>
+        <Characteristic Index="1" Handle="4" UUID="2A01" Property="2" ValueHandle="5" NumofCharacterristicDescriptor="0">
+            <CharacteristicValue Handle="5" Value="0000"/>
+        </Characteristic>
+        <Characteristic Index="2" Handle="6" UUID="2A04" Property="2" ValueHandle="7" NumofCharacterristicDescriptor="0">
+            <CharacteristicValue Handle="7" Value="5000A0000000E803"/>
+        </Characteristic>
+    </PrimaryService>
+    <PrimaryService Index="1" UUID="1801" StartHandle="8" EndHandle="11" NumofIncludeService="0" NumofCharacterristic="1">
+        <Characteristic Index="0" Handle="9" UUID="2A05" Property="32" ValueHandle="10" NumofCharacterristicDescriptor="1">
+            <CharacteristicDescriptor Index="0" Handle="11" UUID="2902"/>
+        </Characteristic>
+    </PrimaryService>
+    <PrimaryService Index="2" UUID="180A" StartHandle="12" EndHandle="30" NumofIncludeService="0" NumofCharacterristic="9">
+        <Characteristic Index="0" Handle="13" UUID="2A23" Property="2" ValueHandle="14" NumofCharacterristicDescriptor="0">
+            <CharacteristicValue Handle="14" Value="0000000000000000"/>
+        </Characteristic>
+        <Characteristic Index="1" Handle="15" UUID="2A24" Property="2" ValueHandle="16" NumofCharacterristicDescriptor="0">
+            <CharacteristicValue Handle="16" Value="67466F7263652D313030"/>
+        </Characteristic>
+        <Characteristic Index="2" Handle="17" UUID="2A25" Property="2" ValueHandle="18" NumofCharacterristicDescriptor="0">
+            <CharacteristicValue Handle="18" Value="53657269616C4E756D"/>
+        </Characteristic>
+        <Characteristic Index="3" Handle="19" UUID="2A26" Property="2" ValueHandle="20" NumofCharacterristicDescriptor="0">
+            <CharacteristicValue Handle="20" Value="323032302D31312D32365F65363763346630"/>
+        </Characteristic>
+        <Characteristic Index="4" Handle="21" UUID="2A27" Property="2" ValueHandle="22" NumofCharacterristicDescriptor="0">
+            <CharacteristicValue Handle="22" Value="5231"/>
+        </Characteristic>
+        <Characteristic Index="5" Handle="23" UUID="2A28" Property="2" ValueHandle="24" NumofCharacterristicDescriptor="0">
+            <CharacteristicValue Handle="24" Value="53572D526576"/>
+        </Characteristic>
+        <Characteristic Index="6" Handle="25" UUID="2A29" Property="2" ValueHandle="26" NumofCharacterristicDescriptor="0">
+            <CharacteristicValue Handle="26" Value="4F594D6F74696F6E"/>
+        </Characteristic>
+        <Characteristic Index="7" Handle="27" UUID="2A2A" Property="2" ValueHandle="28" NumofCharacterristicDescriptor="0">
+            <CharacteristicValue Handle="28" Value="FE006578706572696D656E74616C"/>
+        </Characteristic>
+        <Characteristic Index="8" Handle="29" UUID="2A50" Property="2" ValueHandle="30" NumofCharacterristicDescriptor="0">
+            <CharacteristicValue Handle="30" Value="010D0000001001"/>
+        </Characteristic>
+    </PrimaryService>
+    <PrimaryService Index="3" UUID="00000000000000B000405104D0FF00F0" StartHandle="31" EndHandle="65535" NumofIncludeService="0" NumofCharacterristic="2">
+        <Characteristic Index="0" Handle="32" UUID="00000000000000B000405104E1FF00F0" Property="28" ValueHandle="33" NumofCharacterristicDescriptor="2">
+            <CharacteristicDescriptor Index="0" Handle="34" UUID="2902"/>
+            <CharacteristicDescriptor Index="1" Handle="35" UUID="2901" Value="436F6D6D616E64"/>
+        </Characteristic>
+        <Characteristic Index="1" Handle="36" UUID="00000000000000B000405104E2FF00F0" Property="16" ValueHandle="37" NumofCharacterristicDescriptor="2">
+            <CharacteristicDescriptor Index="0" Handle="38" UUID="2902"/>
+            <CharacteristicDescriptor Index="1" Handle="39" UUID="2901" Value="4E6F74696679"/>
+        </Characteristic>
+    </PrimaryService>
+</GATTService>
